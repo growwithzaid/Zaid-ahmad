@@ -58,3 +58,9 @@ body[data-palette="amber"]{--brand:#d49b38}body[data-palette="teal"]{--brand:#32
 .corner-cat img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 12px rgba(0,0,0,.45))}
 .corner-cat:hover,.corner-cat:focus-visible{transform:translateY(-4px) rotate(4deg) scale(1.05)}
 @media(max-width:767px){.corner-cat{right:14px;bottom:calc(72px + env(safe-area-inset-bottom));width:48px;height:48px}}
+
+/* Neofetch composition: small terminal mark beside Zaid's machine details. */
+.neofetch-layout{display:grid;grid-template-columns:72px minmax(0,1fr);gap:clamp(10px,2vw,22px);align-items:center;margin-bottom:22px}
+.neofetch-cat{margin:0;color:var(--brand);font:500 12px/1.55 var(--mono);white-space:pre;opacity:.78;text-align:center}
+.neofetch-layout .machine-grid{margin:0}
+@media(max-width:767px){.neofetch-layout{grid-template-columns:48px minmax(0,1fr);gap:7px}.neofetch-cat{font-size:8px}.neofetch-layout .machine-grid{grid-template-columns:1fr}}
