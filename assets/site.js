@@ -129,36 +129,64 @@
     });
   });
 
-  if (window.matchMedia('(pointer: fine)').matches && !reduceMotion) {
-    const dot = document.createElement('span');
-    const ring = document.createElement('span');
-    dot.className = 'cursor-dot';
-    ring.className = 'cursor-ring';
-    dot.setAttribute('aria-hidden', 'true');
-    ring.setAttribute('aria-hidden', 'true');
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches && !reduceMotion) {
+    const cursor = document.createElement('span');
+    const face = document.createElement('img');
+    const stylesheet = document.querySelector('link[rel="stylesheet"]');
+    const assetRoot = new URL('.', stylesheet.href);
+    const closedFace = new URL('memes/cursor-cat-closed.png', assetRoot).href;
+    const openFace = new URL('memes/cursor-cat-open.png', assetRoot).href;
+    const clickableSelector = 'a,button,input,textarea,select,summary,[role="button"],[data-cursor-clickable]';
+    let pointerOnClickable = false;
+    let focusOnClickable = false;
+    let currentMouthOpen = false;
+    let lastX = 0;
+    let lastY = 0;
+
+    cursor.className = 'cursor-cat';
+    cursor.setAttribute('aria-hidden', 'true');
+    face.src = closedFace;
+    face.alt = '';
+    cursor.append(face);
     document.body.classList.add('has-custom-cursor');
-    document.body.append(dot, ring);
-    let x = -50;
-    let y = -50;
-    let ringX = -50;
-    let ringY = -50;
-    window.addEventListener('pointermove', (event) => {
-      x = event.clientX;
-      y = event.clientY;
-      dot.style.left = `${x}px`;
-      dot.style.top = `${y}px`;
-    }, { passive: true });
-    const animateRing = () => {
-      ringX += (x - ringX) * 0.18;
-      ringY += (y - ringY) * 0.18;
-      ring.style.left = `${ringX}px`;
-      ring.style.top = `${ringY}px`;
-      requestAnimationFrame(animateRing);
+    document.body.append(cursor);
+
+    const updateMouth = () => {
+      const open = pointerOnClickable || focusOnClickable;
+      if (currentMouthOpen === open) return;
+      currentMouthOpen = open;
+      face.src = open ? openFace : closedFace;
+      cursor.classList.toggle('is-open', open);
     };
-    requestAnimationFrame(animateRing);
-    document.querySelectorAll('a,button,input,textarea,summary').forEach((item) => {
-      item.addEventListener('pointerenter', () => ring.classList.add('is-hover'));
-      item.addEventListener('pointerleave', () => ring.classList.remove('is-hover'));
+
+    const syncPointerTarget = (target) => {
+      pointerOnClickable = target instanceof Element && Boolean(target.closest(clickableSelector));
+      updateMouth();
+    };
+
+    window.addEventListener('pointermove', (event) => {
+      lastX = event.clientX;
+      lastY = event.clientY;
+      cursor.style.left = lastX + 'px';
+      cursor.style.top = lastY + 'px';
+      cursor.classList.add('is-visible');
+      syncPointerTarget(event.target);
+    }, { passive: true });
+    window.addEventListener('scroll', () => {
+      syncPointerTarget(document.elementFromPoint(lastX, lastY));
+    }, { passive: true });
+    document.addEventListener('focusin', (event) => {
+      focusOnClickable = event.target instanceof Element && event.target.matches(clickableSelector);
+      updateMouth();
+    });
+    document.addEventListener('focusout', (event) => {
+      focusOnClickable = event.relatedTarget instanceof Element && event.relatedTarget.matches(clickableSelector);
+      updateMouth();
+    });
+    window.addEventListener('blur', () => {
+      pointerOnClickable = false;
+      focusOnClickable = false;
+      updateMouth();
     });
   }
 
