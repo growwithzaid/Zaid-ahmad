@@ -134,8 +134,8 @@
     const face = document.createElement('img');
     const stylesheet = document.querySelector('link[rel="stylesheet"]');
     const assetRoot = new URL('.', stylesheet.href);
-    const closedFace = new URL('memes/cursor-cat-closed.png', assetRoot).href;
-    const openFace = new URL('memes/cursor-cat-open.png', assetRoot).href;
+    const closedFace = new URL('memes/cursor-cat-closed-transparent.png', assetRoot).href;
+    const openFace = new URL('memes/cursor-cat-open-transparent.png', assetRoot).href;
     const clickableSelector = 'a,button,input,textarea,select,summary,[role="button"],[data-cursor-clickable]';
     let pointerOnClickable = false;
     let focusOnClickable = false;
