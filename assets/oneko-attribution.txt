@@ -1,0 +1,1 @@
+Pixel companion sprite and animation concept adapted from https://github.com/adryd325/oneko.js by adryd (MIT License). The local interaction code was adapted for keyboard focus, pet clicks, touch devices, and reduced-motion preferences.

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://growwithzaid.github.io/Zaid-ahmad/sitemap.xml
